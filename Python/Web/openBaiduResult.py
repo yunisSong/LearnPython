@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 import requests, sys, webbrowser, bs4
-import sys
 
 #伪装浏览器头
 def camouflageWrowser():
@@ -32,7 +31,9 @@ def findNeedResult(request):
 
 # 打开全部搜索结果
 def openElement(el):
-    webbrowser.open(el.get('href'))
+    address = el.get('href')
+    print(address)
+    webbrowser.open(address)
 
 
 #伪装浏览器头
