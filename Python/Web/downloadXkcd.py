@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 import requests, sys, webbrowser, bs4
-
 #伪装浏览器头
-def camouflageBrowserHearder():
+def camouflageWrowser():
     reload(sys)
     sys.setdefaultencoding('utf-8')
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0'}
@@ -37,7 +36,7 @@ def openElement(el):
 
 
 #伪装浏览器头
-headers = camouflageBrowserHearder()
+headers = camouflageWrowser()
 # 读取输入参数
 payload = readInputParameterAndFormat()
 # 请求关键字数据
