@@ -1,48 +1,33 @@
 # -*- coding: UTF-8 -*-
-import requests, sys, webbrowser, bs4
-#伪装浏览器头
-def camouflageWrowser():
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0'}
-    return headers
+import requests, sys, webbrowser, bs4,os
 
-# 读取输入参数并组装为搜索用的参数
-def readInputParameterAndFormat():
-    searchWorld =  ' '.join(sys.argv[1:])
-    payload = {'wd':u'%s'%searchWorld}
-    print("searchWorld = " + searchWorld)
-    return  payload
+currentFilePath = sys.path[0]
+webFilePath = os.path.join(currentFilePath, "file")
+os.chdir(webFilePath)
 
-# 搜索关键字
-def requestsWithParameter(headers,parameter):
-    url = 'http://www.baidu.com/s'
-    r = requests.get(url, params=parameter, headers=headers, timeout=5)
-    return r
+url = 'http://xkcd.com' # starting url
 
-# 查找需要的内容
-def findNeedResult(request):
-    # 查找需要的内容
-    soup = bs4.BeautifulSoup(request.text,"html.parser")
-    linkElems = soup.select('.result > .t > a[href]')
-    topLinkElems = soup.select('.result-op > .t > a[href]')
-    return linkElems + topLinkElems
+while not url.endswith('#'):
+    print('Downloading page %s...' % url)
+    res = requests.get(url)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text,"html.parser")
+    comicElem = soup.select('#comic img')
+    if comicElem == []:
+        print('Could not find comic image.')
+    else:
+        comicUrl = 'http:' + comicElem[0].get('src')
+        # Download the image.
+        print('Downloading image %s...' % (comicUrl))
+        res = requests.get(comicUrl)
+        res.raise_for_status()
+        playFile = open(os.path.basename(comicUrl), 'wb')
+        # playFile = open('python000000.jpg', 'wb')
 
-# 打开全部搜索结果
-def openElement(el):
-    address = el.get('href')
-    print(address)
-    webbrowser.open(address)
+        for chunk in res.iter_content(100000):
+            playFile.write(chunk)
+        playFile.close()
+        prevLink = soup.select('a[rel="prev"]')[0]
+        url = 'http://xkcd.com' + prevLink.get('href')
 
-
-#伪装浏览器头
-headers = camouflageWrowser()
-# 读取输入参数
-payload = readInputParameterAndFormat()
-# 请求关键字数据
-r = requestsWithParameter(headers,payload)
-# 解析返回的结果
-linkElems =  findNeedResult(r)
-
-for el in linkElems:
-    openElement(el)
+print('Done.')
