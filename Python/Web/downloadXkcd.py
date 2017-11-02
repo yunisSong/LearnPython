@@ -7,8 +7,6 @@ webFilePath = os.path.join(currentFilePath, "file")
 os.chdir(webFilePath)
 
 url = 'http://xkcd.com' # starting url
-
-
 while not url.endswith('#'):
     print('Downloading page %s...' % url)
     # 下载 网页
