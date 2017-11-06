@@ -1,4 +1,5 @@
 import threading, time
+import subprocess
 
 print('Start of program.')
 
@@ -17,3 +18,6 @@ threadArgs = threading.Thread(target=threadArgs,args=['Yunis','三十一'])
 threadArgs.start()
 
 print('End of program.')
+
+subprocess.Popen('','')
+subprocess.Popen(['open', '/Applications/Firefox.app/'])
