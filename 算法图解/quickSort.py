@@ -20,6 +20,7 @@ def quickSort(array):
         return array
 
 
+# 这是书籍提供的算法，更符合 python 的写法
 def quicksort(array):
   if len(array) < 2:
     # base case, arrays with 0 or 1 element are already "sorted"
